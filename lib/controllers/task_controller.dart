@@ -52,6 +52,7 @@ class TaskController extends GetxController {
       var updatedTask = Task.fromJson(json.decode(response.body));
       var taskIndex = tasks.indexWhere((task) => task.id == id);
       tasks[taskIndex] = updatedTask;
+      print('object');
     }
   }
 
