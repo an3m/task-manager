@@ -1,32 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/adapters.dart';
-import 'package:tasks_manager/models/task.dart';
-import 'package:tasks_manager/views/home_view.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:tasks_manager/controllers/task_controller.dart';
+import 'package:tasks_manager/controllers/theme_controller.dart';
+import 'package:tasks_manager/views/body.dart';
+import 'package:tasks_manager/views/theming_screen.dart';
 
-void main()  {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //  Open the box
-  runApp(MyApp());
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+
+  // Initialize GetStorage
+  await GetStorage.init();
+
+  // Initialize controllers
+  Get.put(TaskController());
+  final themeController = Get.put(ThemeController());
+
+  runApp(MyApp(themeController: themeController));
 }
 
-
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final ThemeController themeController;
 
-  // This widget is the root of your application.
+  MyApp({Key? key, required this.themeController}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    // Use Obx to reactively update the theme based on themeController's changes
+    return Obx(
+      () => GetMaterialApp(
         title: 'Flutter Demo',
-        
-        theme: ThemeData(
-          // colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
-          // colorSchemeSeed: Colors.amberAccent,
-          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue,brightness: Brightness.light),
-          useMaterial3: true,
-        ),
-        home: HomeView());
+        theme: themeController.themeData, // Use reactive theme data
+        debugShowCheckedModeBanner: false,
+        home: BodyView(),
+        getPages: [
+          GetPage(name: ThemingScreen.routeName, page: () => ThemingScreen()),
+        ],
+      ),
+    );
   }
 }

@@ -1,173 +1,128 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:tasks_manager/views/theming_screen.dart';
+import 'package:tasks_manager/widgets/input_form.dart';
 import 'package:tasks_manager/widgets/task_items.dart';
 
-import '../controllers/task_controller.dart';
-import '../models/task.dart';
-
 class HomeView extends StatelessWidget {
-  const HomeView({Key? key}) : super(key: key);
+  HomeView({Key? key}) : super(key: key);
+  // final TaskController taskController = Get.put(TaskController()); // Initialize controller
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      // appBar: AppBar(
-      //   systemOverlayStyle: SystemUiOverlayStyle(),
-      //   backgroundColor: Colors.amber,
-      //   title: const Text(''),
-      // ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Container(
-              width: width,
-              height: 350,
-              padding: EdgeInsets.all(15),
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
+        child: CustomScrollView(
+          slivers: [
+            // Header Section
+            SliverToBoxAdapter(
+              child: Container(
+                width: double.infinity,
+                height: height * 0.25,
+                padding: const EdgeInsets.all(10),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
                     bottomLeft: Radius.elliptical(50, 30),
-                    bottomRight: Radius.elliptical(50, 30)),
-                gradient: LinearGradient(colors: [
-                  Color.fromARGB(150, 136, 93, 255),
-                  Color.fromARGB(150, 29, 153, 255)
-                ], begin: Alignment.bottomRight, end: Alignment.topLeft),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.menu),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.search),
-                      ),
-                    ],
+                    bottomRight: Radius.elliptical(50, 30),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      CircularPercentIndicator(
-                        radius: 50,
-                        lineWidth: 5,
-                        animation: true,
-                        percent: 0.75,
-                        circularStrokeCap: CircularStrokeCap.round,
-                        progressColor: Theme.of(context).canvasColor,
-                        backgroundColor: Colors.transparent,
-                        center: CircleAvatar(
-                            radius: 35,
-                            backgroundImage: Image.asset(
-                              'assets/images/avatar.png',
-                              fit: BoxFit.cover,
-                            ).image
-                            // AssetImage(),
-                            ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Giga Nigga',
-                            style: TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            'App Devloper',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF8A2BE2), Color(0xFF1E90FF)],
+                    begin: Alignment.bottomRight,
+                    end: Alignment.topLeft,
+                  ),
+                ),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Container(
-                      child: TaskItems(),
-                      height: 500,
-                    )
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Get.toNamed(ThemingScreen.routeName);
+                          },
+                          icon: Icon(
+                            Icons.color_lens,
+                            color: Colors.white,
+                            size: width * 0.08,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.search,
+                            color: Colors.white,
+                            size: width * 0.08,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CircularPercentIndicator(
+                          radius: 50,
+                          lineWidth: 5,
+                          animation: true,
+                          percent: 0.75,
+                          circularStrokeCap: CircularStrokeCap.round,
+                          progressColor: Theme.of(context).colorScheme.primary,
+                          backgroundColor: Colors.white.withOpacity(0.2),
+                          center: CircleAvatar(
+                            radius: 35,
+                            backgroundImage:
+                                AssetImage('assets/images/avatar.png'),
+                          ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'John Doe',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(color: Colors.white),
+                            ),
+                            Text(
+                              'App Developer',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(
+                                    color: Colors.white70,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
             ),
+
+            // Task Items Section
+            SliverList(
+              delegate: SliverChildListDelegate([
+                Container(
+                  height: height * 0.61, // 62% of the height for TaskItems
+                  child: TaskItems(),
+                ),
+              ]),
+            ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          ShowAddTaskDialog._showAddTaskDialog(context);
-        },
-        child: Icon(Icons.add),
+      floatingActionButton: Align(
+        child: InputForm(),
+        alignment: Alignment.bottomCenter,
       ),
-    );
-  }
-}
-
-class ShowAddTaskDialog {
-  // ShowAddTaskDialog(BuildContext context);
-
-  static void _showAddTaskDialog(BuildContext context) {
-    final titleController = TextEditingController();
-    final descriptionController = TextEditingController();
-  final TaskController taskController = Get.put(TaskController());
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text("Add Task"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: titleController,
-                decoration: InputDecoration(labelText: "Title"),
-              ),
-              TextField(
-                controller: descriptionController,
-                decoration: InputDecoration(labelText: "Description"),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () {
-                final task = Task(
-                  id: DateTime.now().millisecondsSinceEpoch,
-                  title: titleController.text,
-                  description: descriptionController.text,
-                  date: DateTime.now(),
-                );
-                taskController.addTask(task);
-                Navigator.of(context).pop();
-              },
-              child: Text("Add"),
-            ),
-          ],
-        );
-      },
     );
   }
 }

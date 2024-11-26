@@ -40,11 +40,17 @@ dependencies:
   hive: ^2.0.5
   hive_flutter: ^1.1.0
   http: ^1.1.2
+  sqflite: ^2.3.2
+  path: ^1.8.3
+  shared_preferences: ^2.2.3
+  flutter_colorpicker: ^1.1.0
+  get_storage: ^2.1.1
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.12.0  # Add the version or latest
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -54,7 +60,14 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   hive_generator: ^1.1.0
   build_runner: ^2.1.4
+#   flutter_launcher_name: ^0.0.1
 
+# flutter_launcher_name:
+#   name: "Your New App Name"
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/list.png"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
